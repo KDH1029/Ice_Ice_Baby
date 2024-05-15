@@ -1,0 +1,15 @@
+Todo List
+
+frontend
+description
+menu
+-option
+-cart
+-purchase
+ranking
+event
+
+backend
+user info
+purchase - wechat pay
+ranking
