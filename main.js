@@ -13,7 +13,7 @@ const UserModel = require('./models/user');
 mongoose
   .connect(url)
   .then(()=>{
-    console.info("connected")
+    console.log("connected");
   }).catch((err)=>{
     console.log("error: ",err);
   });
@@ -21,21 +21,60 @@ mongoose
 app.get('/',(req,res)=>{
   res.send("...");
 });
+app.get('/test/:params',(req,res)=>{
+  console.log(req.params);
+  console.log(req.query);
+});
 
-const userInfo = {
-  name:"aa",
-  history:["1","2","3"],
-  pay:20,
-}
-
-//register user
-app.get('/user',(req,res)=>{
+// data register
+app.get('/user/:id',(req,res)=>{
+  var userInfo = {
+    id:req.params.id,
+    pw:req.query.pw??"null"
+  };
   var newUser = new UserModel(userInfo);
   newUser
     .save()
-    .then(models=>{
-      res.status(200).json({message: "created"});
+    .then(data=>{
+      res.status(200).send(userInfo);
     }).catch(err=>{
-      console.log(err)
+      console.log(err);
+    });
+});
+
+// data inquiry
+app.get('/read',(req,res)=>{
+  UserModel
+    .find()
+    .then(data=>{
+      res.status(200).send(data);
+    })
+    .catch(err=>{
+      res.status(500).send(err);
+    });
+});
+
+// data update
+// /update?id="id"&new="new id"
+app.get('/update',(req,res)=>{
+  UserModel
+    .findOneAndUpdate({id:req.query.id},{id:req.query.new})
+    .then(data=>{
+      res.status(200).send(data);
+    })
+    .catch(err=>{
+      res.status(500).send(err);
+    });
+});
+
+// delete data
+app.get('/delete/:id',(req,res)=>{
+  UserModel
+    .remove({id:req.params.id})
+    .then(data=>{
+      res.status(200).send(data);
+    })
+    .catch(err=>{
+      res.status(500).send(err);
     });
 });
