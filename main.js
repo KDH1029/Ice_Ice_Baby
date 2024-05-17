@@ -1,3 +1,8 @@
+/**
+ * @requires express
+ * @requires mongoose
+ */
+
 const express = require('express');
 const app = express();
 const port = 8080;
@@ -6,13 +11,15 @@ app.listen(port,()=>{
   console.log("port: "+port);
 });
 
-const db = require('./mongo')
+const db = require('./modules/mongo')
+const event = require('./modules/event')
 
 // register data
-app.get('/create/:id',(req,res)=>{
+app.get('/create',(req,res)=>{
   var userInfo = {
-    id:req.params.id,
-    pw:req.query.pw??"null"
+    id:req.query.id??Math.floor(Math.random()*10000)/100,
+    pw:req.query.pw??"null",
+    pay:Math.floor(Math.random()*10000)/100
   };
   db.create(userInfo)
     .then(data=>{
@@ -27,7 +34,7 @@ app.get('/create/:id',(req,res)=>{
 // search data
 app.get('/search',(req,res)=>{
   db
-    .search(req.query.q)
+    .find(req.query.q)
     .then(data=>{
       console.log(`db.search(${req.query.q}): `,data);
       res.status(200).send(data);
@@ -55,7 +62,7 @@ app.get('/delete/:query',(req,res)=>{
   db
     .del(JSON.parse(req.params.query))
     .then(data=>{
-      console.log(`db.del(${req.params.query}: `,data);
+      console.log(`db.del(${req.params.query}): `,data);
       res.status(200).send(data);
     })
     .catch(err=>{
@@ -63,3 +70,15 @@ app.get('/delete/:query',(req,res)=>{
       res.status(500).send(err);
     });
 });
+
+app.get('/rank',(req,res)=>{
+  event.rank(3)
+  .then(data=>{
+    console.log(`db.rank(): `,data);
+    res.status(200).send(data);
+  })
+  .catch(err=>{
+    console.log("error: ",err);
+    res.status(500).send(err);
+  });
+})

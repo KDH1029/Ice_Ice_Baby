@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const url = `mongodb+srv://KDH:4n3g7!WTY_zZVd-@cluster0.sthvvfu.mongodb.net/userDB?retryWrites=true&w=majority&appName=Cluster0`;
-const UserModel = require('./models/user');
+const UserModel = require('../models/user');
 
 /**
  * Connect mongo db
@@ -32,16 +32,12 @@ function create(obj){
  * @param {Object} query search condition
  * @returns search result
  */
-function search(query){
-  return new Promise((resolve)=>{
+function find(query){
+  return new Promise((resolve,reject)=>{
     UserModel
       .find(query)
-      .then(data=>{
-        resolve(data);
-      })
-      .catch(err=>{
-        console.log(err);
-      });
+      .then(data=>resolve(data))
+      .catch(err=>reject(err));
   });
 }
 
@@ -52,15 +48,11 @@ function search(query){
  * @returns update result
  */
 function update(query,obj){
-  return new Promise((resolve)=>{
+  return new Promise((resolve,reject)=>{
     UserModel
       .updateMany(query,obj)
-      .then(data=>{
-        resolve(data);
-      })
-      .catch(err=>{
-        console.log(err);
-      });
+      .then(data=>resolve(data))
+      .catch(err=>reject(err));
   });
 }
 
@@ -70,15 +62,11 @@ function update(query,obj){
  * @returns delete result
  */
 function del(query){
-  return new Promise((resolve)=>{
+  return new Promise((resolve,reject)=>{
     UserModel
       .deleteMany(query)
-      .then(data=>{
-        resolve(data);
-      })
-      .catch(err=>{
-        console.log(err);
-      });
+      .then(data=>resolve(data))
+      .catch(err=>reject(err));
     });
 }
 
