@@ -7,23 +7,28 @@ const express = require('express');
 const app = express();
 const port = 8080;
 
+const bodyParser = require('body-parser');
+app.use(bodyParser.json()) 
+app.use(bodyParser.urlencoded({extend:true}))
+
 app.listen(port,()=>{
   console.log("port: "+port);
 });
 
-const db = require('./modules/mongo')
-const event = require('./modules/event')
+const db = require('./models/modules/mongo')
+const event = require('./models/modules/event')
 
 // register data
-app.get('/create',(req,res)=>{
+app.post('/create',(req,res)=>{
+  console.log(req.body)
   var userInfo = {
-    id:req.query.id??Math.floor(Math.random()*10000)/100,
-    pw:req.query.pw??"null",
-    pay:Math.floor(Math.random()*10000)/100
+    id:req.body.id??Math.floor(Math.random()*10000)/100,
+    pw:req.body.pw??"null",
+    pay:req.body.pay??Math.floor(Math.random()*10000)/100
   };
   db.create(userInfo)
     .then(data=>{
-      console.log(`db.create(${userInfo}): `,data);
+      console.log(`db.create(${JSON.stringify(userInfo)}): `,data);
       res.status(200).send(data);
     })
     .catch(err=>{

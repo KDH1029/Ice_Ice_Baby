@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const url = `mongodb+srv://KDH:4n3g7!WTY_zZVd-@cluster0.sthvvfu.mongodb.net/userDB?retryWrites=true&w=majority&appName=Cluster0`;
-const UserModel = require('../models/user');
+const UserModel = require('../user');
 
 /**
  * Connect mongo db

@@ -1,4 +1,4 @@
-const UserModel = require('../models/user');
+const UserModel = require('../user');
 
 /**
  * Sort by payment
@@ -12,6 +12,9 @@ function rank(top){
       .then(data=>resolve(data))
       .catch(err=>reject(err));
   });
+}
+function bingo(){
+  
 }
 
 module.exports = {rank};

@@ -4,3 +4,4 @@ Ice Ice Baby Official payment
 # npm required:
 express
 mongoose
+body-parser
