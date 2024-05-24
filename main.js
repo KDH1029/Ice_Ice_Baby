@@ -8,15 +8,16 @@ const app = express();
 const port = 8080;
 
 const bodyParser = require('body-parser');
-app.use(bodyParser.json()) 
-app.use(bodyParser.urlencoded({extend:true}))
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extend:true}));
 
 app.listen(port,()=>{
   console.log("port: "+port);
 });
 
-const db = require('./models/modules/mongo')
-const event = require('./models/modules/event')
+const user = require('./models/modules/user');
+const sale = require('./models/modules/sale');
+const event = require('./models/modules/event');
 
 // register data
 app.post('/create',(req,res)=>{
@@ -26,9 +27,10 @@ app.post('/create',(req,res)=>{
     pw:req.body.pw??"null",
     pay:req.body.pay??Math.floor(Math.random()*10000)/100
   };
-  db.create(userInfo)
+  user
+    .create(userInfo)
     .then(data=>{
-      console.log(`db.create(${JSON.stringify(userInfo)}): `,data);
+      console.log(`user.create(${JSON.stringify(userInfo)}): `,data);
       res.status(200).send(data);
     })
     .catch(err=>{
@@ -38,10 +40,10 @@ app.post('/create',(req,res)=>{
 });
 // search data
 app.get('/search',(req,res)=>{
-  db
+  user
     .find(req.query.q)
     .then(data=>{
-      console.log(`db.search(${req.query.q}): `,data);
+      console.log(`user.search(${req.query.q}): `,data);
       res.status(200).send(data);
     })
     .catch(err=>{
@@ -51,10 +53,10 @@ app.get('/search',(req,res)=>{
 });
 // data update
 app.get('/update',(req,res)=>{
-  db
+  user
     .update(JSON.parse(req.query.query),JSON.parse(req.query.obj))
     .then(data=>{
-      console.log(`db.update(${req.query.query},${req.query.obj}): `,data);
+      console.log(`user.update(${req.query.query},${req.query.obj}): `,data);
       res.status(200).send(data);
     })
     .catch(err=>{
@@ -64,10 +66,10 @@ app.get('/update',(req,res)=>{
 });
 // delete data
 app.get('/delete/:query',(req,res)=>{
-  db
+  user
     .del(JSON.parse(req.params.query))
     .then(data=>{
-      console.log(`db.del(${req.params.query}): `,data);
+      console.log(`user.del(${req.params.query}): `,data);
       res.status(200).send(data);
     })
     .catch(err=>{
@@ -79,7 +81,7 @@ app.get('/delete/:query',(req,res)=>{
 app.get('/rank',(req,res)=>{
   event.rank(3)
   .then(data=>{
-    console.log(`db.rank(): `,data);
+    console.log(`user.rank(): `,data);
     res.status(200).send(data);
   })
   .catch(err=>{
