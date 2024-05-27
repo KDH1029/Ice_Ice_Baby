@@ -52,31 +52,22 @@ app.post('/createAccount',(req,res)=>{
 // search data
 app.post('/searchAccount',(req,res)=>{
   user
-    .search(req.body.id)
+    .search(req.body.id,req.body.pw)
     .then(data=>{
       console.log(`user.search(${req.body.id},${req.body.pw}): `,data);
-      if(data!=null)
-        if(req.body.pw == data.pw){
-          console.log(req.body.id, "sent.");
-          res.status(200).send(data);
-        }else{
-          console.log(req.body.id, "failed.");
-          res.status(500).send({error:"Authentication failed."});
-        }
-      else
-        res.status(500).send({error: "user does not exists."});
+      res.status(200).send(data);
     })
     .catch(err=>{
       console.log("error: ",err);
-      res.status(500).send({error:"unknown error"});
+      res.status(500).send(err);
     });
 });
 // data update
-app.get('/updateAccount',(req,res)=>{
+app.post('/updateAccount',(req,res)=>{
   user
-    .update(req.body.id,JSON.parse(req.body.query))
+    .update(req.body.id,req.body.pw,JSON.parse(req.body.query))
     .then(data=>{
-      console.log(`user.update(${req.body.id},${JSON.parse(req.body.query)}): `,data);
+      console.log(`user.update(${req.body.id},${req.body.query}): `,data);
       res.status(200).send(data);
     })
     .catch(err=>{
@@ -85,11 +76,11 @@ app.get('/updateAccount',(req,res)=>{
     });
 });
 // delete data
-app.get('/delete/:query',(req,res)=>{
+app.post('/deleteAccount',(req,res)=>{
   user
-    .del(JSON.parse(req.params.query))
+    .del(req.body.id,req.body.pw)
     .then(data=>{
-      console.log(`user.del(${req.params.query}): `,data);
+      console.log(`user.del(${req.body.id}): `,data);
       res.status(200).send(data);
     })
     .catch(err=>{

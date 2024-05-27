@@ -32,11 +32,19 @@ function create(obj){
  * @param {Object} query search condition
  * @returns search result
  */
-function search(query){
+function search(id,pw){
   return new Promise((resolve,reject)=>{
     UserModel
-      .findOne({id:query})
-      .then(data=>resolve(data))
+      .findOne({id:id})
+      .then(data=>{
+        if(data!=null)
+          if(data.pw==pw)
+            resolve(data);
+          else
+            reject({error:"Authentication failed."});
+        else
+          reject({error:"user not found."});
+      })
       .catch(err=>reject(err));
   });
 }
@@ -47,12 +55,16 @@ function search(query){
  * @param {Object} obj 
  * @returns update result
  */
-function update(id,obj){
+function update(id,pw,obj){
   return new Promise((resolve,reject)=>{
-    UserModel
-      .findOneAndUpdate({id:id},obj)
-      .then(data=>resolve(data))
-      .catch(err=>reject(err));
+    search(id,pw)
+      .then(data=>{
+        UserModel
+          .findOneAndUpdate({id:id},obj)
+          .then(data=>resolve(data))
+          .catch(err=>reject(err));
+      })
+      .catch(err=>resolve(err));
   });
 }
 
@@ -61,13 +73,17 @@ function update(id,obj){
  * @param {Object} query search condition
  * @returns delete result
  */
-function del(query){
+function del(id,pw){
   return new Promise((resolve,reject)=>{
-    UserModel
-      .deleteMany(query)
-      .then(data=>resolve(data))
-      .catch(err=>reject(err));
-    });
+    search(id,pw)
+      .then(data=>{
+        UserModel
+          .deleteOne({id:id})
+          .then(data=>resolve(data))
+          .catch(err=>reject(err));
+      })
+      .catch(err=>resolve(err));
+  });
 }
 
 module.exports = {create,search,update,del};
