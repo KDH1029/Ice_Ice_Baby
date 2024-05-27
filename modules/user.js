@@ -7,10 +7,10 @@ const UserModel = require('../models/user');
  */
 mongoose
   .connect(url)
-  .then(()=>{
+  .then(() => {
     console.log("connected");
-  }).catch((err)=>{
-    console.log("error: ",err);
+  }).catch((err) => {
+    console.log("error: ", err);
   });
 
 /**
@@ -18,12 +18,12 @@ mongoose
  * @param {Object} obj object to create
  * @returns create result
  */
-function create(obj){
-  return new Promise((resolve,reject)=>{
+function create(obj) {
+  return new Promise((resolve, reject) => {
     UserModel
       .create(obj)
-      .then(data=>resolve(data))
-      .catch(err=>reject(err));
+      .then(data => resolve(data))
+      .catch(err => reject(err));
   });
 }
 
@@ -32,20 +32,20 @@ function create(obj){
  * @param {Object} query search condition
  * @returns search result
  */
-function search(id,pw){
-  return new Promise((resolve,reject)=>{
+function search(id, pw) {
+  return new Promise((resolve, reject) => {
     UserModel
-      .findOne({id:id})
-      .then(data=>{
-        if(data!=null)
-          if(data.pw==pw)
+      .findOne({ id: id })
+      .then(data => {
+        if (data != null)
+          if (data.pw == pw)
             resolve(data);
           else
-            reject({error:"Authentication failed."});
+            reject({ error: "Authentication failed." });
         else
-          reject({error:"user not found."});
+          reject({ error: "user not found." });
       })
-      .catch(err=>reject(err));
+      .catch(err => reject(err));
   });
 }
 
@@ -55,16 +55,16 @@ function search(id,pw){
  * @param {Object} obj 
  * @returns update result
  */
-function update(id,pw,obj){
-  return new Promise((resolve,reject)=>{
-    search(id,pw)
-      .then(data=>{
+function update(id, pw, obj) {
+  return new Promise((resolve, reject) => {
+    search(id, pw)
+      .then(data => {
         UserModel
-          .findOneAndUpdate({id:id},obj)
-          .then(data=>resolve(data))
-          .catch(err=>reject(err));
+          .findOneAndUpdate({ id: id }, obj)
+          .then(data => resolve(data))
+          .catch(err => reject(err));
       })
-      .catch(err=>resolve(err));
+      .catch(err => resolve(err));
   });
 }
 
@@ -73,17 +73,17 @@ function update(id,pw,obj){
  * @param {Object} query search condition
  * @returns delete result
  */
-function del(id,pw){
-  return new Promise((resolve,reject)=>{
-    search(id,pw)
-      .then(data=>{
+function del(id, pw) {
+  return new Promise((resolve, reject) => {
+    search(id, pw)
+      .then(data => {
         UserModel
-          .deleteOne({id:id})
-          .then(data=>resolve(data))
-          .catch(err=>reject(err));
+          .deleteOne({ id: id })
+          .then(data => resolve(data))
+          .catch(err => reject(err));
       })
-      .catch(err=>resolve(err));
+      .catch(err => resolve(err));
   });
 }
 
-module.exports = {create,search,update,del};
+module.exports = { create, search, update, del };

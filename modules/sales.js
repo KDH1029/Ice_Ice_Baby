@@ -13,12 +13,12 @@ mongoose
  * @param {Object} obj object to create
  * @returns create result
  */
-function create(obj){
-  return new Promise((resolve,reject)=>{
+function create(obj) {
+  return new Promise((resolve, reject) => {
     SalesModel
       .create(obj)
-      .then(data=>resolve(data))
-      .catch(err=>reject(err));
+      .then(data => resolve(data))
+      .catch(err => reject(err));
   });
 }
 
@@ -27,12 +27,12 @@ function create(obj){
  * @param {Object} query search condition
  * @returns search result
  */
-function find(query){
-  return new Promise((resolve,reject)=>{
+function find(query) {
+  return new Promise((resolve, reject) => {
     SalesModel
       .find(query)
-      .then(data=>resolve(data))
-      .catch(err=>reject(err));
+      .then(data => resolve(data))
+      .catch(err => reject(err));
   });
 }
 
@@ -42,12 +42,12 @@ function find(query){
  * @param {Object} obj object to replace
  * @returns update result
  */
-function update(query,obj){
-  return new Promise((resolve,reject)=>{
+function update(query, obj) {
+  return new Promise((resolve, reject) => {
     SalesModel
-      .updateMany(query,obj)
-      .then(data=>resolve(data))
-      .catch(err=>reject(err));
+      .updateMany(query, obj)
+      .then(data => resolve(data))
+      .catch(err => reject(err));
   });
 }
 
@@ -56,13 +56,13 @@ function update(query,obj){
  * @param {Object} query search condition
  * @returns delete result
  */
-function del(query){
-  return new Promise((resolve,reject)=>{
+function del(query) {
+  return new Promise((resolve, reject) => {
     SalesModel
       .deleteMany(query)
-      .then(data=>resolve(data))
-      .catch(err=>reject(err));
-    });
+      .then(data => resolve(data))
+      .catch(err => reject(err));
+  });
 }
 
-module.exports = {create,find,update,del};
+module.exports = { create, find, update, del };
