@@ -12,6 +12,10 @@ const UserSchema = new mongoose.Schema({
     required:true,
     trim:true
   },
+  username:{
+    type:String,
+    required:true
+  },
   history:[String],
   pay:Number,
   event:mongoose.Schema.Types.Mixed

@@ -32,10 +32,10 @@ function create(obj){
  * @param {Object} query search condition
  * @returns search result
  */
-function find(query){
+function search(query){
   return new Promise((resolve,reject)=>{
     UserModel
-      .find(query)
+      .findOne({id:query})
       .then(data=>resolve(data))
       .catch(err=>reject(err));
   });
@@ -43,14 +43,14 @@ function find(query){
 
 /**
  * Update existing data that match the query to given object.
- * @param {Object} query search condition
- * @param {Object} obj object to replace
+ * @param {String} id 
+ * @param {Object} obj 
  * @returns update result
  */
-function update(query,obj){
+function update(id,obj){
   return new Promise((resolve,reject)=>{
     UserModel
-      .updateMany(query,obj)
+      .findOneAndUpdate({id:id},obj)
       .then(data=>resolve(data))
       .catch(err=>reject(err));
   });
@@ -70,4 +70,4 @@ function del(query){
     });
 }
 
-module.exports = {create,find,update,del};
+module.exports = {create,search,update,del};

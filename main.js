@@ -8,9 +8,16 @@ const express = require('express');
 const app = express();
 const port = 8080;
 
+// may have potential security issues.
+const cors = require('cors');
+app.use(cors());
+
 const bodyParser = require('body-parser');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:true}));
+
+const fs = require('fs');
+const errorList = JSON.parse(fs.readFileSync('error.json'));
 
 app.listen(port,()=>{
   console.log("port: "+port);
@@ -21,12 +28,12 @@ const sales = require('./modules/sales');
 const event = require('./modules/event');
 
 // register data
-app.post('/create',(req,res)=>{
+app.post('/createAccount',(req,res)=>{
   console.log(req.body)
   var userInfo = {
-    id:req.body.id??Math.floor(Math.random()*10000)/100,
-    pw:req.body.pw??"null",
-    pay:req.body.pay??Math.floor(Math.random()*10000)/100
+    id:req.body.id,
+    pw:req.body.pw,
+    username:req.body.username
   };
   user
     .create(userInfo)
@@ -36,28 +43,40 @@ app.post('/create',(req,res)=>{
     })
     .catch(err=>{
       console.log("error: ",err);
-      res.status(500).send(err);
+      if(errorList.hasOwnProperty(err.code))
+        res.status(500).send({error:errorList[err.code]});
+      else
+        res.status(500).send({error:"unknown error."});
     });
 });
 // search data
-app.get('/search',(req,res)=>{
+app.post('/searchAccount',(req,res)=>{
   user
-    .find(req.query.q)
+    .search(req.body.id)
     .then(data=>{
-      console.log(`user.search(${req.query.q}): `,data);
-      res.status(200).send(data);
+      console.log(`user.search(${req.body.id},${req.body.pw}): `,data);
+      if(data!=null)
+        if(req.body.pw == data.pw){
+          console.log(req.body.id, "sent.");
+          res.status(200).send(data);
+        }else{
+          console.log(req.body.id, "failed.");
+          res.status(500).send({error:"Authentication failed."});
+        }
+      else
+        res.status(500).send({error: "user does not exists."});
     })
     .catch(err=>{
       console.log("error: ",err);
-      res.status(500).send(err);
+      res.status(500).send({error:"unknown error"});
     });
 });
 // data update
-app.get('/update',(req,res)=>{
+app.get('/updateAccount',(req,res)=>{
   user
-    .update(JSON.parse(req.query.query),JSON.parse(req.query.obj))
+    .update(req.body.id,JSON.parse(req.body.query))
     .then(data=>{
-      console.log(`user.update(${req.query.query},${req.query.obj}): `,data);
+      console.log(`user.update(${req.body.id},${JSON.parse(req.body.query)}): `,data);
       res.status(200).send(data);
     })
     .catch(err=>{
