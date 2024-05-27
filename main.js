@@ -1,6 +1,7 @@
 /**
  * @requires express
  * @requires mongoose
+ * @requires body-parser
  */
 
 const express = require('express');
@@ -9,15 +10,15 @@ const port = 8080;
 
 const bodyParser = require('body-parser');
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extend:true}));
+app.use(bodyParser.urlencoded({extended:true}));
 
 app.listen(port,()=>{
   console.log("port: "+port);
 });
 
-const user = require('./models/modules/user');
-const sale = require('./models/modules/sale');
-const event = require('./models/modules/event');
+const user = require('./modules/user');
+const sales = require('./modules/sales');
+const event = require('./modules/event');
 
 // register data
 app.post('/create',(req,res)=>{

@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const ItemSchema = new mongoose.Schema({
+const SalesSchema = new mongoose.Schema({
   id:{
     type:String,
     required:true,
@@ -15,5 +15,5 @@ const ItemSchema = new mongoose.Schema({
   pay:Number,
 },{timestamps:true});
 
-const ItemModel = mongoose.model('items', ItemSchema);
-module.exports = ItemModel;
+const SalesModel = mongoose.model('sales', SalesSchema);
+module.exports = SalesModel;

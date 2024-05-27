@@ -1,17 +1,12 @@
 const mongoose = require('mongoose');
-const url = `mongodb+srv://KDH:4n3g7!WTY_zZVd-@cluster0.sthvvfu.mongodb.net/userDB?retryWrites=true&w=majority&appName=Cluster0`;
-const UserModel = require('../models/user');
+const url = `mongodb+srv://KDH:4n3g7!WTY_zZVd-@cluster0.sthvvfu.mongodb.net/salesDB?retryWrites=true&w=majority&appName=Cluster0`;
+const SalesModel = require('../models/sales');
 
 /**
  * Connect mongo db
  */
 mongoose
-  .connect(url)
-  .then(()=>{
-    console.log("connected");
-  }).catch((err)=>{
-    console.log("error: ",err);
-  });
+  .createConnection(url);
 
 /**
  * Register data into mongo db.
@@ -20,7 +15,7 @@ mongoose
  */
 function create(obj){
   return new Promise((resolve,reject)=>{
-    UserModel
+    SalesModel
       .create(obj)
       .then(data=>resolve(data))
       .catch(err=>reject(err));
@@ -34,7 +29,7 @@ function create(obj){
  */
 function find(query){
   return new Promise((resolve,reject)=>{
-    UserModel
+    SalesModel
       .find(query)
       .then(data=>resolve(data))
       .catch(err=>reject(err));
@@ -49,7 +44,7 @@ function find(query){
  */
 function update(query,obj){
   return new Promise((resolve,reject)=>{
-    UserModel
+    SalesModel
       .updateMany(query,obj)
       .then(data=>resolve(data))
       .catch(err=>reject(err));
@@ -63,7 +58,7 @@ function update(query,obj){
  */
 function del(query){
   return new Promise((resolve,reject)=>{
-    UserModel
+    SalesModel
       .deleteMany(query)
       .then(data=>resolve(data))
       .catch(err=>reject(err));
