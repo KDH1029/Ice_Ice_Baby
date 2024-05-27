@@ -5,16 +5,16 @@ const UserModel = require('../models/user');
  * @param {Number} top number of users to find
  * @returns top ranked user
  */
-function rank(top){
-  return new Promise((resolve,reject)=>{
+function rank(top) {
+  return new Promise((resolve, reject) => {
     UserModel
-      .find().sort({"pay":-1}).limit(top)
-      .then(data=>resolve(data))
-      .catch(err=>reject(err));
+      .find().sort({ "pay": -1 }).limit(top)
+      .then(data => resolve(data))
+      .catch(err => reject(err));
   });
 }
-function bingo(){
-  
+function bingo() {
+
 }
 
-module.exports = {rank};
+module.exports = { rank };
